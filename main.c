@@ -24,7 +24,7 @@ void startProgram() {
 
 void menuAdmin() {
     printf("\n*** Student Management System Using C ***\n\n");
-    printf("\t\t  MENU\n");
+    printf("\t      STUDENT ADMIN\n");
     printf("\t =======================\n");
     printf("\t [1] Students management.\n");
     printf("\t [2] Classrooms management.\n");
@@ -45,6 +45,18 @@ void menuStudent() {
     printf("\t [3] Search A student.\n");
     printf("\t [4] Edit A student.\n");
     printf("\t [5] Delete A student.\n");
+    printf("\t [6] Sort All student.\n");
+    printf("\t [0] Exit the Program.\n");
+    printf("\t =======================\n");
+    printf("\t Enter The Choice:");
+}
+
+void menuSortStudent() {
+    printf("\n*** Student Management System Using C ***\n\n");
+    printf("\t      STUDENT SORT\n");
+    printf("\t =======================\n");
+    printf("\t [1] A --> Z.\n");
+    printf("\t [2] Z --> A.\n");
     printf("\t [0] Exit the Program.\n");
     printf("\t =======================\n");
     printf("\t Enter The Choice:");
@@ -146,7 +158,7 @@ void addStudent(struct Student student[], int *size) {
     fgets(newStudent.name, sizeof(newStudent.name), stdin);
     newStudent.name[strcspn(newStudent.name, "\n")] = '\0';
 
-    printf("Enter Day of Birth (day/month/year): ");
+    printf("Enter Day of Birth (dd/mm/yyyy): ");
     scanf("%d/%d/%d", &newStudent.dateOfBirth.day, &newStudent.dateOfBirth.month, &newStudent.dateOfBirth.year);
     getchar();
 
@@ -182,6 +194,7 @@ void updateStudent(struct Student student[], int size) {
     char phoneNew[20];
 
     char inputIdUpdate[20];
+    printf("\n\t\t\t\t\t*** EDIT A STUDENT ***\n");
     int flag = 0;
     while (flag == 0) {
         printf("Enter the ID to update:");
@@ -218,40 +231,61 @@ void updateStudent(struct Student student[], int size) {
             printf("STUDENT ID DOES NOT EXIST. PLEASE TRY AGAIN !!!\n\n");
         }
     }
-
 }
+
+
+void sortStudent(struct Student student[], int size) {
+    int choice;
+    menuSortStudent();
+    scanf("%d", &choice);
+
+    // for (int i = 0; i < size; i++) {
+    //     if
+    // }
+}
+
 
 void choiceStudent(struct Student student[], int *size) {
     int choiceMenuStudent;
-    menuStudent();
-    scanf("%d", &choiceMenuStudent);
-    getchar();
-    switch (choiceMenuStudent) {
-        case 1:
-            clearScreen();
-            addStudent(student, size);
-            break;
-        case 2:
-            clearScreen();
-            displayStudents(student, *size);
-            break;
-        case 3:
+    int keepRunning = 1;
+    while (keepRunning) {
+        clearScreen();
+        menuStudent();
+        scanf("%d", &choiceMenuStudent);
+        getchar();
+        switch (choiceMenuStudent) {
+            case 1:
+                clearScreen();
+                addStudent(student, size);
+                break;
+            case 2:
+                clearScreen();
+                displayStudents(student, *size);
+                break;
+            case 3:
+                clearScreen();
 
-            clearScreen();
-            break;
-        case 4:
-            clearScreen();
-            updateStudent(student, *size);
-            break;
-        case 5:
-            clearScreen();
-            break;
-        case 0:
-            break;
-        default:
-            printf("INVALID SELECTION. PLEASE TRY AGAIN !!!");
-            break;
+                break;
+            case 4:
+                clearScreen();
+                updateStudent(student, *size);
+                break;
+            case 5:
+                clearScreen();
+                break;
+            case 6:
+                clearScreen();
+                sortStudent(student, *size);
+                break;
+            case 0:
+                keepRunning = 0;
+                break;
+            default:
+                printf("INVALID SELECTION. PLEASE TRY AGAIN !!!");
+                break;
+        }
     }
+
 }
 
 
@@ -298,7 +332,6 @@ int main(void) {
             "0939752955",
             "tranbichanh69908"
         }
-
     };
 
     int size = 4;
