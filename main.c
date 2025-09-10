@@ -71,7 +71,7 @@ struct Date {
 };
 
 struct Student {
-    char studentId[20];
+    int studentId;
     char classroomId[10];
     char name[20];
     struct Date dateOfBirth;
@@ -101,9 +101,9 @@ struct Teacher {
 };
 
 void selectDisplay() {
+    char choice[100];
     while (1) {
         printf("Go back(b) or Exit(0)?: ");
-        char choice[100];
         fgets(choice, sizeof(choice), stdin);
         choice[strcspn(choice, "\n")] = '\0';
         if (strcmp(choice, "b") == 0) {
@@ -121,104 +121,101 @@ void selectDisplay() {
 
 void displayStudents(struct Student student[], int size) {
     printf("\n\t\t\t\t\t*** ALL STUDENT ***\n");
-    printf("|===============|===========|====================|============================|====================|==============|\n");
-    printf("|       ID      |   Class   |        Name        |           Email            |       Phone        |   NO.Course  |\n");
-    printf("|===============|===========|====================|============================|====================|==============|\n");
+    printf("|===============|====================|============================|====================|==============|\n");
+    printf("|       ID      |        Name        |           Email            |       Phone        |   NO.Course  |\n");
+    printf("|===============|====================|============================|====================|==============|\n");
     for (int i = 0; i < size; i++) {
-        printf("| %-13s | %-9s | %-18s | %-26s | %-18s | %-12d |\n",
+        printf("| %-13d | %-18s | %-26s | %-18s | %-12d |\n",
             student[i].studentId,
-            student[i].classroomId,
             student[i].name,
             student[i].email,
             student[i].phone,
             i + 1);
-        printf("|---------------|-----------|--------------------|----------------------------|--------------------|--------------|\n");
+        printf("|---------------|--------------------|----------------------------|--------------------|--------------|\n");
     }
     selectDisplay();
 }
 
 void addStudent(struct Student student[], int *size) {
     if (*size > 100) {
-        printf("Cannot add more students. Limit reached!\n");
+        printf("CANNOT ADD MORE STUDENTS. LIMIT REACHED !!!\n");
         return;
     }
-    struct Student newStudent;
 
+    struct Student newStudent;
     printf("\n\t\t\t\t\t*** ADD A NEW STUDENT ***\n");
 
-    printf("Enter ID: ");
-    fgets(newStudent.studentId, sizeof(newStudent.studentId), stdin);
-    newStudent.studentId[strcspn(newStudent.studentId, "\n")] = '\0';
+    newStudent.studentId = *size + 1;
+    printf("- ID: %d\n\n", newStudent.studentId);
 
-    printf("Enter Classroom ID: ");
-    fgets(newStudent.classroomId, sizeof(newStudent.classroomId), stdin);
-    newStudent.classroomId[strcspn(newStudent.classroomId, "\n")] = '\0';
-
-    printf("Enter Name: ");
+    printf("- Enter Name: ");
     fgets(newStudent.name, sizeof(newStudent.name), stdin);
     newStudent.name[strcspn(newStudent.name, "\n")] = '\0';
 
-    printf("Enter Day of Birth (dd/mm/yyyy): ");
+    printf("- Enter Day of Birth (dd/mm/yyyy): ");
     scanf("%d/%d/%d", &newStudent.dateOfBirth.day, &newStudent.dateOfBirth.month, &newStudent.dateOfBirth.year);
     getchar();
 
-    printf("Enter Gender (1 for Male, 0 for Female): ");
+    printf("- Enter Gender (1 for Male, 0 for Female): ");
     int g;
     scanf("%d", &g);
     getchar();
     newStudent.gender = (g == 1);
 
-    printf("Enter Email: ");
+    printf("- Enter Email: ");
     fgets(newStudent.email, sizeof(newStudent.email), stdin);
     newStudent.email[strcspn(newStudent.email, "\n")] = '\0';
 
-    printf("Enter Phone: ");
+    printf("- Enter Phone: ");
     fgets(newStudent.phone, sizeof(newStudent.phone), stdin);
     newStudent.phone[strcspn(newStudent.phone, "\n")] = '\0';
 
-    printf("Enter Password: ");
+    printf("- Enter Password: ");
     fgets(newStudent.password, sizeof(newStudent.password), stdin);
     newStudent.password[strcspn(newStudent.password, "\n")] = '\0';
 
     student[*size] = newStudent;
     (*size)++;
 
-    printf("Student added successfully!\n");
+    printf("STUDENT ADDED SUCCESSFULLY !!!\n");
     selectDisplay();
 }
 
 void updateStudent(struct Student student[], int size) {
-    char classroomIdNew[10];
     char nameNew[20];
     char emailNew[30];
     char phoneNew[20];
 
-    char inputIdUpdate[20];
+    int inputIdUpdate;
     printf("\n\t\t\t\t\t*** EDIT A STUDENT ***\n");
     int flag = 0;
     while (flag == 0) {
-        printf("Enter the ID to update:");
-        fgets(inputIdUpdate, sizeof(inputIdUpdate), stdin);
-        inputIdUpdate[strcspn(inputIdUpdate, "\n")] = '\0';
+        printf("- Enter the ID to update:");
+        scanf("%d", &inputIdUpdate);
+        getchar();
         for (int i = 0; i < size; i++) {
-            if (strcmp(student[i].studentId, inputIdUpdate) == 0) {
+            if (student[i].studentId == inputIdUpdate) {
                 flag = 1;
-                printf("Enter classroom update:");
-                fgets(classroomIdNew, 10, stdin);
-                classroomIdNew[strcspn(classroomIdNew, "\n")] = '\0';
-                strcpy(student[i].classroomId, classroomIdNew);
 
-                printf("Enter name update:");
+                printf("STUDENT INFORMATITONS\n");
+                printf("------------------------\n");
+                printf("ID: %d\n", student[i].studentId);
+                printf("NAME: %s\n", student[i].name);
+                printf("EMAIL: %s\n", student[i].email);
+                printf("PHONE: %s\n", student[i].phone);
+                printf("------------------------\n\n");
+
+                printf("- Enter name update:");
                 fgets(nameNew, 20, stdin);
                 nameNew[strcspn(nameNew, "\n")] = '\0';
                 strcpy(student[i].name, nameNew);
 
-                printf("Enter email update:");
+                printf("- Enter email update:");
                 fgets(emailNew, 30, stdin);
                 emailNew[strcspn(emailNew, "\n")] = '\0';
                 strcpy(student[i].email, emailNew);
 
-                printf("Enter phone update:");
+                printf("- Enter phone update:");
                 fgets(phoneNew, 20, stdin);
                 phoneNew[strcspn(phoneNew, "\n")] = '\0';
                 strcpy(student[i].phone, phoneNew);
@@ -233,22 +230,139 @@ void updateStudent(struct Student student[], int size) {
     }
 }
 
+void deleteStudent(struct Student student[], int *size) {
+    if (*size == 0) {
+        printf("CANNOT DELETE MORE STUDENTS. LIMIT REACHED !!!\n");
+        return;
+    }
 
-void sortStudent(struct Student student[], int size) {
-    int choice;
-    menuSortStudent();
-    scanf("%d", &choice);
+    printf("\n\t\t\t\t\t*** DELETE A STUDENT ***\n");
+    int idStudentDelete;
+    int flag = 0;
+    do {
+        printf("- Enter ID delete:");
+        scanf("%d", &idStudentDelete);
+        getchar();
 
-    // for (int i = 0; i < size; i++) {
-    //     if
-    // }
+        for (int i = 0; i < *size; i++) {
+            if (idStudentDelete == student[i].studentId) {
+                flag = 1;
+
+                printf("STUDENT INFORMATITONS\n");
+                printf("------------------------\n");
+                printf("ID: %d\n", student[i].studentId);
+                printf("NAME: %s\n", student[i].name);
+                printf("EMAIL: %s\n", student[i].email);
+                printf("PHONE: %s\n", student[i].phone);
+                printf("------------------------\n\n");
+
+                int inputSelection;
+
+                do {
+                    printf("Do you agree to delete the student?( 1 for Yes, 0 for No ):");
+                    scanf("%d", &inputSelection);
+                    getchar();
+                    switch (inputSelection) {
+                        case 1:
+                            for (int j = i; j < *size - 1; j++) {
+                                student[j] = student[j + 1];
+                            }
+                            (*size)--;
+                            printf("DELETE SUCCESSFULLY !!!\n\n");
+                            return;
+                        case 0:
+                            printf("DELETE STUDENT FAILED !!!\n\n");
+                            return;
+                        default:
+                            printf("INVALID SELECTION. PLEASE TRY AGAIN !!!\n\n");
+                            break;
+                    }
+                }while (1);
+            }
+        }
+        if (flag == 0) {
+            printf("STUDENT ID DOES NOT EXIST. PLEASE TRY AGAIN !!!\n\n");
+        }
+    }while (1);
+
 }
 
 
-void choiceStudent(struct Student student[], int *size) {
+void extractLastName(char fullName[], char lastName[]) {
+    int len = strlen(fullName);
+    int pos = len - 1;
+
+    while (pos >= 0 && fullName[pos] != ' ') {
+        pos--;
+    }
+
+    if (pos < 0) {
+        strcpy(lastName, fullName);
+    } else {
+        strcpy(lastName, fullName + pos + 1);
+    }
+}
+
+void sortStudent(struct Student student[], int size) {
+    int choice;
+    do {
+        clearScreen();
+        menuSortStudent();
+        scanf("%d", &choice);
+        getchar();
+        switch (choice) {
+            case 1:
+                char lastName1[50], lastName2[50];
+
+                for (int i = 0; i < size - 1; i++) {
+                    for (int j = i + 1; j < size; j++) {
+                        extractLastName(student[i].name, lastName1);
+                        extractLastName(student[j].name, lastName2);
+
+                        int cmp = strcmp(lastName1, lastName2);
+
+                        if (cmp > 0 || (cmp == 0 && strcmp(student[i].name, student[j].name) > 0)) {
+                            struct Student tmp = student[i];
+                            student[i] = student[j];
+                            student[j] = tmp;
+                        }
+                    }
+                }
+
+                displayStudents(student, size);
+                break;
+            case 2:
+                char lastName3[50], lastName4[50];
+
+                for (int i = 0; i < size - 1; i++) {
+                    for (int j = i + 1; j < size; j++) {
+                        extractLastName(student[i].name, lastName3);
+                        extractLastName(student[j].name, lastName4);
+
+                        int cmp = strcmp(lastName3, lastName4);
+
+                        if (cmp < 0 || (cmp == 0 && strcmp(student[i].name, student[j].name) < 0)) {
+                            struct Student tmp = student[i];
+                            student[i] = student[j];
+                            student[j] = tmp;
+                        }
+                    }
+                }
+                displayStudents(student, size);
+                break;
+            case 0:
+                break;
+            default:
+                printf("INVALID SELECTION. PLEASE TRY AGAIN !!!\n\n");
+                break;
+        }
+    }while (choice != 0);
+}
+
+
+void stduentAdmin(struct Student student[], int *size) {
     int choiceMenuStudent;
-    int keepRunning = 1;
-    while (keepRunning) {
+    do {
         clearScreen();
         menuStudent();
         scanf("%d", &choiceMenuStudent);
@@ -272,28 +386,62 @@ void choiceStudent(struct Student student[], int *size) {
                 break;
             case 5:
                 clearScreen();
+                deleteStudent(student, size);
                 break;
             case 6:
                 clearScreen();
                 sortStudent(student, *size);
                 break;
             case 0:
-                keepRunning = 0;
                 break;
             default:
-                printf("INVALID SELECTION. PLEASE TRY AGAIN !!!");
+                printf("INVALID SELECTION. PLEASE TRY AGAIN !!!\n\n");
                 break;
         }
-    }
-
+    }while (choiceMenuStudent != 0);
 }
 
+void choiceAdmin(struct Student student[], int *size) {
+    int choiceMenuAdmin;
+    do {
+        clearScreen();
+        menuAdmin();
+        scanf("%d", &choiceMenuAdmin);
+        getchar();
+        switch (choiceMenuAdmin) {
+            case 1:
+                clearScreen();
+                stduentAdmin(student, size);
+                break;
+            case 2:
+                clearScreen();
+                break;
+            case 3:
+                clearScreen();
+                break;
+            case 4:
+                clearScreen();
+                break;
+            case 5:
+                clearScreen();
+                break;
+            case 6:
+                clearScreen();
+                break;
+            case 0:
+                break;
+            default:
+                printf("INVALID SELECTION. PLEASE TRY AGAIN !!!\n\n");
+                break;
+        }
+    }while (choiceMenuAdmin != 0);
+}
 
 int main(void) {
     int choice;
     struct Student student[100] = {
         {
-            "017206004502",
+            1,
             "CNTT6",
             "Tran Anh Quoc",
             {2,11,2006},
@@ -303,7 +451,7 @@ int main(void) {
             "Qatran2006@"
         },
         {
-            "020207056395",
+            2,
             "CNTT1",
             "Duong Thi Bich",
             {3,2,2007},
@@ -313,7 +461,7 @@ int main(void) {
             "bichduong07"
         },
         {
-            "014204995680",
+            3,
             "CNTT4",
             "Tran Quoc Anh",
             {3,8,2009},
@@ -323,7 +471,7 @@ int main(void) {
             "quocanhtran09"
         },
         {
-            "057205963816",
+            4,
             "CNTT3",
             "Tran Bich Anh",
             {6,9,2008},
@@ -343,16 +491,14 @@ int main(void) {
     switch (choice) {
         case 1:
             clearScreen();
-            menuAdmin();
+            choiceAdmin(student, &size);
             break;
         case 2:
             clearScreen();
-            choiceStudent(student, &size);
             break;
         case 3:
             clearScreen();
             break;
-
         case 0:
             printf("\n=============== Thank  You ================\n");
             printf("============== See You Soon ===============\n");
@@ -360,7 +506,7 @@ int main(void) {
             break;
 
         default:
-            printf("INVALID SELECTION. PLEASE TRY AGAIN !!!");
+            printf("INVALID SELECTION. PLEASE TRY AGAIN !!!\n\n");
             break;
     }
     }while (choice != 0);
